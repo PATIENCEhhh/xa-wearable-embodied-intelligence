@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "purpose": "iCAN未穿戴演示的4/6号初始位置参考",
+  "source_record": "original-j46-initial-reference-20261016-214613.json",
+  "pose_confirmation": "用户确认当前姿态与旧工程标定一致",
+  "applied_to_firmware": false,
+  "permanent_motor_zero_changed": false,
+  "motors": {
+    "4": {
+      "motor_id": 4,
+      "uid": "0137340c023029b3",
+      "initial_raw_rad": 1.1466503143310547,
+      "legacy_direction": -1.0,
+      "legacy_gear_ratio": 7.1844,
+      "legacy_zero_offset_raw_rad": 0.312,
+      "legacy_joint_label": "肩部抬臂",
+      "mapping_basis": "旧工程命名及用户确认，未新增单轴映射试验",
+      "stable_capture": true,
+      "position_span_raw_rad": 0.00019168853759765625,
+      "new_motion_range_verified": false
+    },
+    "6": {
+      "motor_id": 6,
+      "uid": "06b6311821301b68",
+      "initial_raw_rad": 1.3306431770324707,
+      "legacy_direction": 1.0,
+      "legacy_gear_ratio": 1.0,
+      "legacy_zero_offset_raw_rad": 4.543,
+      "legacy_joint_label": "上臂旋转",
+      "mapping_basis": "旧工程命名及用户确认，未新增单轴映射试验",
+      "stable_capture": true,
+      "position_span_raw_rad": 0.0,
+      "new_motion_range_verified": false
+    }
+  }
+}

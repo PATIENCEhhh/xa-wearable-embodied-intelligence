@@ -31,9 +31,8 @@
 #include <stdlib.h>
 #include "viv_dc_type.h"
 #include "viv_dc_os.h"
-#if _BAREMETAL
+/* viv_os_sleep 在 RTOS 构建中也调用该延时接口，需要完整函数声明。 */
 #include "cy_syslib.h"
-#endif
 
 #define MAX_SIZE 0x1FA400
 

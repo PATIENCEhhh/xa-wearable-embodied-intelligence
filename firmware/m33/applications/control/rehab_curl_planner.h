@@ -59,6 +59,8 @@ typedef struct
     rt_uint32_t completed_repetitions;
     rt_uint8_t arrival_count;
     rt_bool_t command_pending;
+    /* 一轮从哪个运动端开始：仅在到达另一端并驻留后计数完成。 */
+    rehab_curl_phase_t first_move_phase;
 } rehab_curl_planner_t;
 
 typedef struct
@@ -75,6 +77,11 @@ rehab_curl_result_t rehab_curl_planner_start(rehab_curl_planner_t *planner,
                                                float feedback_pos_rad,
                                                float feedback_vel_rad_s,
                                                rt_uint32_t now_ms);
+/* 本机构原始角度增大为屈曲：先到高角度端，再回低角度端。
+ * 保留原start的默认顺序，已有调用者不随本次演示改变。 */
+rehab_curl_result_t rehab_curl_planner_start_flexion_first(
+    rehab_curl_planner_t *planner, const rehab_curl_config_t *config,
+    float feedback_pos_rad, float feedback_vel_rad_s, rt_uint32_t now_ms);
 void rehab_curl_planner_step(rehab_curl_planner_t *planner,
                              float feedback_pos_rad,
                              float feedback_vel_rad_s,

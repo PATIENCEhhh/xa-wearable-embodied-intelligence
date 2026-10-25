@@ -24,6 +24,7 @@
 #include "m33/voice_rehab_ipc_bridge.h"
 #include "m33/xiaozhi_pcm_probe_data.h"
 #include "control/control_layer.h"
+#include "m33_dap_diag.h"
 
 __attribute__((weak)) struct _reent _impure_data;
 
@@ -1114,6 +1115,8 @@ int main(void)
     while (1)
     {
         sensor_fill_demo_data(&g_main_sensor, rt_tick_get());
+        /* 诊断默认无请求；试动独立线程执行且现场门禁默认关闭。 */
+        m33_dap_diag_poll();
         sensor_update_latest(&g_main_sensor);
         control_apply_sensor_feedback(&g_main_sensor);
         safety_monitor_update(&g_runtime.safety, &g_main_sensor);

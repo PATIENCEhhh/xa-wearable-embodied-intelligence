@@ -1,0 +1,21 @@
+{
+  "captured_at": "2026-10-17T03:10:28.108766+08:00",
+  "user_pose": "手臂朝下；点击抬臂提示故障或检查姿态",
+  "evidence": "original-restore-lift-down-reference-resample.json",
+  "raw_samples_rad": [
+    6.103786468505859,
+    6.103901386260986,
+    6.10386323928833
+  ],
+  "sample_range_rad": 0.00011491775512695312,
+  "down_reference_raw_rad": 6.10386323928833,
+  "previous_down_reference_raw_rad": 1.128856182,
+  "previous_manual_raised_raw_rad": -9.951126099,
+  "preserved_signed_excursion_raw_rad": -11.079982281,
+  "min_raw_rad": -4.976119041711669,
+  "max_raw_rad": 6.15386323928833,
+  "target_raw_rad": -4.92611904171167,
+  "endpoint_status": "translated from previously manually sampled excursion; new absolute raised endpoint not manually resampled",
+  "persistent_motor_zero_written": false,
+  "hardware_acceptance": "pending"
+}

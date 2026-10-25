@@ -23,6 +23,7 @@
 #include "voice_service.h"
 #include "websocket_client.h"
 #include "wifi_config_service.h"
+#include "wifi_debug.h"
 #include "xiaozhi_wake_engine.h"
 #include "xiaozhi_voice_relay.h"
 #include "drv_pdm.h"
@@ -104,7 +105,7 @@ extern int lvgl_thread_init(void);
 #define M55_WIFI_LVGL_ONLY 1
 #endif
 #ifndef M55_XIAOZHI_AUTO_ENABLE
-#define M55_XIAOZHI_AUTO_ENABLE 1
+#define M55_XIAOZHI_AUTO_ENABLE 0
 #endif
 #ifndef M55_WIFI_AUTO_CONNECT_ON_BOOT
 #define M55_WIFI_AUTO_CONNECT_ON_BOOT 1
@@ -2196,6 +2197,13 @@ MSH_CMD_EXPORT(m55_wifi_scan, Start CM55 WiFi scan);
 
 static void voice_boot_thread_entry(void *parameter)
 {
+#if M55_WIFI_LVGL_ONLY && !M55_XIAOZHI_AUTO_ENABLE
+    /* iCAN恢复旧电机执行流程，交互按用户选择保留本地LVGL。 */
+    RT_UNUSED(parameter);
+    g_voice_boot_thread=RT_NULL;
+    rt_kprintf("[m55] local LVGL demo; voice boot disabled\n");
+    return;
+#endif
     rt_err_t ret;
     const char *api_key = "YOUR_BAIDU_API_KEY";
     const char *secret_key = "YOUR_BAIDU_SECRET_KEY";
@@ -2254,6 +2262,8 @@ int main(void)
 
     rt_kprintf("Hello RT-Thread\r\n");
     rt_kprintf("This core is cortex-m55\n");
+    /* 无线诊断先启动监听；网络就绪后即可访问，不依赖云端语音或 ROS。 */
+    rt_kprintf("[m55] wifi debug start=%d\n", wifi_debug_start());
 #if M55_DETACH_CONSOLE_FOR_M33_QA
     m55_console_detach();
 #endif

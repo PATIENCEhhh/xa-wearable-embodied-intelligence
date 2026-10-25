@@ -82,8 +82,24 @@ rehab_curl_result_t rehab_curl_planner_start(rehab_curl_planner_t *planner,
 
     planner->fault = REHAB_CURL_RESULT_OK;
     planner->last_command_ms = now_ms - config->command_refresh_ms;
+    planner->first_move_phase = REHAB_CURL_PHASE_MOVE_TOP;
     curl_enter_phase(planner, REHAB_CURL_PHASE_MOVE_TOP, now_ms);
     return REHAB_CURL_RESULT_OK;
+}
+
+rehab_curl_result_t rehab_curl_planner_start_flexion_first(
+    rehab_curl_planner_t *planner, const rehab_curl_config_t *config,
+    float feedback_pos_rad, float feedback_vel_rad_s, rt_uint32_t now_ms)
+{
+    rehab_curl_result_t result = rehab_curl_planner_start(
+        planner, config, feedback_pos_rad, feedback_vel_rad_s, now_ms);
+    if (result == REHAB_CURL_RESULT_OK)
+    {
+        /* TOP/BOTTOM沿用历史变量名；本机构BOTTOM是原始角度较大的屈曲端。 */
+        planner->first_move_phase = REHAB_CURL_PHASE_MOVE_BOTTOM;
+        curl_enter_phase(planner, REHAB_CURL_PHASE_MOVE_BOTTOM, now_ms);
+    }
+    return result;
 }
 
 void rehab_curl_planner_step(rehab_curl_planner_t *planner,
@@ -179,9 +195,17 @@ void rehab_curl_planner_step(rehab_curl_planner_t *planner,
     }
     else if ((rt_uint32_t)(now_ms - planner->phase_started_ms) >= planner->config.dwell_ms)
     {
-        if (planner->phase == REHAB_CURL_PHASE_DWELL_BOTTOM)
+        /* 第一端到位不能提前计作完整一轮；必须经过另一端的到位和驻留。
+         * 默认顺序在BOTTOM计数，先屈曲顺序则在TOP（伸展端）计数。 */
+        if (((planner->phase == REHAB_CURL_PHASE_DWELL_BOTTOM) &&
+             (planner->first_move_phase == REHAB_CURL_PHASE_MOVE_TOP)) ||
+            ((planner->phase == REHAB_CURL_PHASE_DWELL_TOP) &&
+             (planner->first_move_phase == REHAB_CURL_PHASE_MOVE_BOTTOM)))
         {
             planner->completed_repetitions++;
+        }
+        if (planner->phase == REHAB_CURL_PHASE_DWELL_BOTTOM)
+        {
             curl_enter_phase(planner, REHAB_CURL_PHASE_MOVE_TOP, now_ms);
         }
         else

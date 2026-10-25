@@ -13,6 +13,7 @@
 #include "rehab_mode_manager.h"
 #include "rehab_service.h"
 #include "sensor.h"
+#include "../m33_bench5.h"
 
 #define rt_kprintf(...) do { } while (0)
 
@@ -767,6 +768,9 @@ static rt_err_t ctrl_can_send(rt_uint32_t id, rt_uint8_t ide, const rt_uint8_t *
     }
 #endif
 
+    /* 专用试动期间不允许STOP携带清故障标志，避免掩盖故障后继续调试。 */
+    if (ide==RT_CAN_EXTID && ((id>>24)&31U)==4U && len && data[0]) return -RT_EBUSY;
+    if (m33_bench5_tx_enter(id,ide)!=RT_EOK) return -RT_EBUSY;
     rt_memset(&msg, 0, sizeof(msg));
     msg.id = id;
     msg.ide = ide;
@@ -787,6 +791,7 @@ static rt_err_t ctrl_can_send(rt_uint32_t id, rt_uint8_t ide, const rt_uint8_t *
     {
         rt_err_t ret = (written == RT_EOK) ? RT_EOK : -RT_ERROR;
         can_metrics_record_tx(&msg, ret);
+        m33_bench5_tx_leave();
         return ret;
     }
 #else
@@ -794,6 +799,7 @@ static rt_err_t ctrl_can_send(rt_uint32_t id, rt_uint8_t ide, const rt_uint8_t *
     {
         rt_err_t ret = (written == sizeof(msg)) ? RT_EOK : -RT_ERROR;
         can_metrics_record_tx(&msg, ret);
+        m33_bench5_tx_leave();
         return ret;
     }
 #endif
@@ -1370,12 +1376,14 @@ static void ctrl_update_motor_param_private(const struct rt_can_msg *msg)
     rt_memset(&param, 0, sizeof(param));
     param.motor_id = motor_id;
     param.index = index;
+    param.response_type = comm_type;
     param.raw_u8 = msg->data[4];
     param.timestamp = rt_tick_get();
     param.valid = RT_TRUE;
     rt_memcpy(&param.value_f32, &msg->data[4], sizeof(float));
 
     rt_mutex_take(&s_data_lock, RT_WAITING_FOREVER);
+    param.response_seq = s_last_motor_param.response_seq + 1U;
     s_last_motor_param = param;
     rt_mutex_release(&s_data_lock);
 

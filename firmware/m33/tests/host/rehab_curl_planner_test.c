@@ -122,12 +122,44 @@ static void test_segment_timeout_and_command_refresh(void)
     assert(output.result == REHAB_CURL_RESULT_SEGMENT_TIMEOUT);
 }
 
+static void test_flexion_first_returns_to_extension_before_counting(void)
+{
+    rehab_curl_planner_t planner;
+    rehab_curl_config_t config = test_config();
+    rehab_curl_output_t output;
+    rt_uint32_t now = 100U;
+    assert(rehab_curl_planner_start_flexion_first(&planner, &config,
+                                                 6.30f, 0.0f, now) == REHAB_CURL_RESULT_OK);
+    rehab_curl_planner_step(&planner, 6.30f, 0.0f, RT_TRUE, RT_FALSE, now, &output);
+    assert(output.action == REHAB_CURL_ACTION_COMMAND_POSITION);
+    assert(output.target_pos_rad == config.bottom_target_pos_rad);
+    /* 到屈曲端只是半轮；驻留后必须返回伸展端。 */
+    for (unsigned i = 0; i < config.arrival_samples; ++i)
+        rehab_curl_planner_step(&planner, config.bottom_target_pos_rad, 0.0f,
+                               RT_TRUE, RT_FALSE, now += 20U, &output);
+    assert(output.phase == REHAB_CURL_PHASE_DWELL_BOTTOM && !output.completed_repetitions);
+    rehab_curl_planner_step(&planner, config.bottom_target_pos_rad, 0.0f,
+                           RT_TRUE, RT_FALSE, now += config.dwell_ms, &output);
+    assert(output.phase == REHAB_CURL_PHASE_MOVE_TOP && !output.completed_repetitions);
+    assert(output.target_pos_rad == config.top_target_pos_rad);
+    for (unsigned i = 0; i < config.arrival_samples; ++i)
+        rehab_curl_planner_step(&planner, config.top_target_pos_rad, 0.0f,
+                               RT_TRUE, RT_FALSE, now += 20U, &output);
+    assert(output.phase == REHAB_CURL_PHASE_DWELL_TOP && !output.completed_repetitions);
+    rehab_curl_planner_step(&planner, config.top_target_pos_rad, 0.0f,
+                           RT_TRUE, RT_FALSE, now += config.dwell_ms, &output);
+    assert(output.completed_repetitions == 1U);
+    assert(rehab_curl_planner_start_flexion_first(&planner, &config,
+                                                 6.0f, 0.0f, now) == REHAB_CURL_RESULT_HARD_LIMIT);
+}
+
 int main(void)
 {
     test_start_rejects_invalid_or_unsafe_position();
     test_cycles_between_calibrated_endpoints();
     test_faults_latch_until_restart();
     test_segment_timeout_and_command_refresh();
+    test_flexion_first_returns_to_extension_before_counting();
     puts("rehab_curl_planner_test: PASS");
     return 0;
 }

@@ -1,0 +1,31 @@
+{
+  "created": "2026-10-17T00:27:32.561242+08:00",
+  "purpose": "read-only initial pose reference; no enable/motion/zero",
+  "axes": {
+    "4": {
+      "id": {
+        "ok": false,
+        "error": "query_rate_limit",
+        "http_status": 429
+      },
+      "position": [],
+      "velocity": []
+    }
+  },
+  "accepted": false,
+  "before": {
+    "ok": true,
+    "joint": 5,
+    "opcode": 7,
+    "seq": 14,
+    "result": 0,
+    "state": 14,
+    "flags": 3,
+    "trial_locked": true,
+    "active": false,
+    "run_result": -26,
+    "stop_send_result": -255,
+    "physical_stop_verified": false
+  },
+  "error": "ID read failed"
+}

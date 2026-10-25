@@ -59,16 +59,23 @@ static rt_err_t ST7102_get_info(struct rt_i2c_client *dev, struct rt_touch_info 
 {
     rt_uint8_t Reg_High[2];
     rt_uint8_t Reg_Low[2];
+    rt_uint8_t command[2] = {0, 0};
 
-    ST7102_read_regs(dev, ST7102_MAX_X_Coord_High, Reg_High, 1);
-    ST7102_read_regs(dev, ST7102_MAX_X_Coord_Low, Reg_Low, 1);
+    /* 读取函数接收两字节地址缓冲区，不能把寄存器数值当作内存指针。 */
+    command[1] = ST7102_MAX_X_Coord_High;
+    if (ST7102_read_regs(dev, command, Reg_High, 1) != RT_EOK) return -RT_ERROR;
+    command[1] = ST7102_MAX_X_Coord_Low;
+    if (ST7102_read_regs(dev, command, Reg_Low, 1) != RT_EOK) return -RT_ERROR;
     info->range_x = (Reg_High[0] & 0x3F) << 8 | Reg_Low[0];
 
-    ST7102_read_regs(dev, ST7102_MAX_Y_Coord_High, Reg_High, 1);
-    ST7102_read_regs(dev, ST7102_MAX_Y_Coord_Low, Reg_Low, 1);
+    command[1] = ST7102_MAX_Y_Coord_High;
+    if (ST7102_read_regs(dev, command, Reg_High, 1) != RT_EOK) return -RT_ERROR;
+    command[1] = ST7102_MAX_Y_Coord_Low;
+    if (ST7102_read_regs(dev, command, Reg_Low, 1) != RT_EOK) return -RT_ERROR;
     info->range_y = (Reg_High[0] & 0x3F) << 8 | Reg_Low[0];
 
-    ST7102_read_regs(dev, ST7102_MAX_Touches, Reg_Low, 1);
+    command[1] = ST7102_MAX_Touches;
+    if (ST7102_read_regs(dev, command, Reg_Low, 1) != RT_EOK) return -RT_ERROR;
     info->point_num = Reg_Low[0];
 
     return RT_EOK;

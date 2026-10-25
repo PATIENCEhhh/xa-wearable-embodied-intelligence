@@ -1,0 +1,152 @@
+{
+  "created": "2026-10-17T04:45:56.400397+08:00",
+  "profile": "ican-lvgl-resistance-v14",
+  "abi": 11,
+  "flashed": true,
+  "flash_verified": true,
+  "physical_acceptance": false,
+  "previous_installed": "original-lvgl-pages-v13-ready.json",
+  "action": "elbow velocity damping: joint5 raw iq_ref, joint4/6 hold fresh session origins",
+  "reused_strategy": "original rehab_resist_strategy.c unchanged, adaptive PID/ADRC disabled",
+  "parameters": {
+    "current_max_a": 1.0,
+    "current_gain_a_per_rad_s": 2.0,
+    "deadband_rad_s": 0.03,
+    "current_slew_a_per_20ms": 0.03,
+    "feedback_speed_max_rad_s": 1.0,
+    "relative_position_raw_rad": [
+      -0.15,
+      1.65
+    ],
+    "duration_s": 120,
+    "holds_current_a": 1.0,
+    "feedback_max_age_ms": 250,
+    "heartbeat_ms": 1500
+  },
+  "checks": {
+    "host": "passed: fixed actions/teaching/playback and resistance guard",
+    "direction": "opposing current, reversal clears old sign, deadband zero, 1A cap",
+    "preparation": "fresh stopped feedback, five still samples, mode/limit/zero readback before enable",
+    "stop": "all-axis STOP on user/fault/dropout; 120s normal completion",
+    "ui": "third page, prepare/run distinction, timer and STOP; ten actual LVGL renders reviewed",
+    "builds": "M33/M55 passed",
+    "package": "passed",
+    "binding": "passed",
+    "font": "passed"
+  },
+  "artifacts": {
+    "firmware/m33/rt-thread.elf": {
+      "sha256": "f1f0a9c3a275cce2d5b90052ffd6608f38d3a7ee57eb9984cdc2624bf4df53ab",
+      "bytes": 4811148
+    },
+    "firmware/m33/build/rtthread.hex": {
+      "sha256": "0f0fa8362ef1d1b30615fc26dd060399dff70129f38055a9c16e5eb0a423a957",
+      "bytes": 2639793
+    },
+    "firmware/m33/build/rtthread_xip_verify.hex": {
+      "sha256": "cc805629fdd2c199d3bf33cf5db3d1fdb1f53c3131d77e2d2e2015c5dfb654ed",
+      "bytes": 2639793
+    },
+    "firmware/m55/rt-thread.elf": {
+      "sha256": "97a75ad615b1f15d2c65dc931c2397ede7e14de8327956d9af7ddfb9daf8540f",
+      "bytes": 22375636
+    },
+    "firmware/m55/rtthread.hex": {
+      "sha256": "272b2dda0c01856ede48e040e003f409a798d2d2027f8769d065cadcc20f7c95",
+      "bytes": 6025501
+    },
+    "firmware/m33/applications/m33_bench5.c": {
+      "sha256": "e162ed18076bc8b5c5f9494c370beb2f286cee2486c4d148f9c6d6e3c1cbf245",
+      "bytes": 39643
+    },
+    "firmware/m33/applications/bench_resist.c": {
+      "sha256": "c94866eb9d37f0c8171867ad7f6b632454946c644867b4eca9b569698ba770d4",
+      "bytes": 6404
+    },
+    "firmware/m33/applications/bench_resist.h": {
+      "sha256": "0be0a4d2dcc4c316b2bca583976e4de2e6e9d2ba063a27d37798e65da06fd59c",
+      "bytes": 835
+    },
+    "firmware/m33/applications/control/rehab_resist_strategy.c": {
+      "sha256": "a1dc0ad4c69c658d3359393086fc9e215dcec10720d8502b6affd91f81e5c7b1",
+      "bytes": 4755
+    },
+    "firmware/m33/applications/SConscript": {
+      "sha256": "9a6d6e980bb044c122f5485c5f1733057f97473cf42dba9ba1f17fab54287ca5",
+      "bytes": 474
+    },
+    "firmware/m55/applications/ican_curl_panel.c": {
+      "sha256": "5584229aabeb2866312e1473a3e9f4aed0ceca41053069f1084a36de67c3e62f",
+      "bytes": 16434
+    },
+    "firmware/m55/applications/wifi_debug.c": {
+      "sha256": "745974510481bab6aba3fc5bc8192e9e52b90cc605f86ef6f55bdeb3d03f9567",
+      "bytes": 18627
+    },
+    "firmware/shared/ican_curl_ui.h": {
+      "sha256": "8ccd32997fb173b583e0c637d8912ea0c88ca6bc7974d36fe36e1f2aef1c42f1",
+      "bytes": 1482
+    },
+    "firmware/m55/applications/wifi_debug_binding.h": {
+      "sha256": "2faa7ffd080dbe3e3f150a7e80f875cd16a6f01325820d5b9111b50f77a70c8b",
+      "bytes": 500
+    },
+    "tools/test/bench_resist_owner_cases.h": {
+      "sha256": "97a7617f17d172e445c748459788c4cb7e9facc85e082ddc5ba5527c32959705",
+      "bytes": 3621
+    }
+  },
+  "flash_exit_code": 0,
+  "installed_at": "2026-10-17T05:04:00.194103+08:00",
+  "verification_bytes": {
+    "m55": 2146304,
+    "m33": 946176,
+    "m33_xip": 938492
+  },
+  "postflash": {
+    "status": {
+      "ok": true,
+      "service": "arm-wifi-debug-v5",
+      "m55_tick": 55811,
+      "wifi_ready": true,
+      "m33_binding": true,
+      "m33_polls": 556,
+      "request_seq": 0,
+      "done_seq": 0,
+      "read_only": false,
+      "queries_read_only": true,
+      "local_arming_required": true,
+      "auth_ready": false,
+      "motion_profile": "ican-lvgl-resistance-v14",
+      "single_cycle": true,
+      "hold_joints": [
+        4,
+        6
+      ],
+      "stop_joints": [
+        4,
+        5,
+        6
+      ]
+    },
+    "ui_ram": {
+      "seq": 0,
+      "command": 0,
+      "heartbeat": [
+        256,
+        258
+      ],
+      "done": 0,
+      "result": 0,
+      "state": 0,
+      "active": false,
+      "cycles": 0,
+      "phase": 0,
+      "fault": 0
+    },
+    "descriptor_abi": 11,
+    "note": "Idle with no local or remote start request during postflash checks; physical resistance direction and feel remain untested.",
+    "probe_note": "Reset-time probe examination errors recovered; all three image verifications passed, process exit 0, postflash binding and heartbeat valid."
+  },
+  "publication_note": "Historical 2026-10-17 record copied for source backup on 2026-10-25; no new board test. Binary artifacts are represented by hashes only."
+}

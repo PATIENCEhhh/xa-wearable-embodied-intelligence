@@ -4,6 +4,7 @@
 #include "voice_service.h"
 #include "xiaozhi_ui_state.h"
 #include "xiaozhi_voice_relay.h"
+#include "ican_curl_panel.h"
 #include <rthw.h>
 
 #define REHAB_APP_BLE_STATUS_STALE_MS 3000U
@@ -1164,6 +1165,18 @@ static lv_obj_t *panel_button_sized(lv_obj_t *parent,
     return button;
 }
 
+void rehab_wifi_panel_suspend(void)
+{
+    if(g_scan_refresh_timer) {lv_timer_delete(g_scan_refresh_timer);g_scan_refresh_timer=NULL;}
+    if(g_xiaozhi_refresh_timer) {lv_timer_delete(g_xiaozhi_refresh_timer);g_xiaozhi_refresh_timer=NULL;}
+    g_status_label=NULL;g_xiaozhi_panel=NULL;g_xiaozhi_label=NULL;
+    g_xiaozhi_detail_label=NULL;g_xiaozhi_reply_label=NULL;g_xiaozhi_spinner=NULL;
+    g_ap_list=NULL;g_qa_big_panel=NULL;g_qa_big_label=NULL;
+}
+static void return_to_curl(lv_event_t *event)
+{
+    (void)event;ican_curl_panel_create();
+}
 rt_err_t rehab_wifi_panel_create(void)
 {
     lv_obj_t *screen = lv_screen_active();
@@ -1184,6 +1197,9 @@ rt_err_t rehab_wifi_panel_create(void)
     lv_obj_set_style_text_color(title, lv_color_hex(0x111827), 0);
     lv_obj_set_style_text_font(title, panel_font(), 0);
     lv_obj_align(title, LV_ALIGN_TOP_LEFT, 22, 16);
+    lv_obj_t *curl_button=panel_button_sized(screen,"动作",return_to_curl,88,34,
+        lv_color_hex(0x059669),lv_color_hex(0x047857));
+    lv_obj_align(curl_button,LV_ALIGN_TOP_RIGHT,-20,12);
 
     g_status_label = lv_label_create(screen);
     lv_obj_set_width(g_status_label, 430);
@@ -1395,7 +1411,7 @@ static void rehab_wifi_panel_boot_timer_cb(lv_timer_t *timer)
 {
     RT_UNUSED(timer);
     g_boot_panel_timer = RT_NULL;
-    (void)rehab_wifi_panel_create();
+    ican_curl_panel_create();
 }
 
 static void rehab_wifi_panel_cmd(int argc, char **argv)
@@ -1417,6 +1433,7 @@ MSH_CMD_EXPORT(rehab_wifi_panel_qa_cmd, Open LVGL WiFi panel and start scan);
 
 #else
 
+void rehab_wifi_panel_suspend(void) {}
 rt_err_t rehab_wifi_panel_create(void)
 {
     return -RT_ENOSYS;

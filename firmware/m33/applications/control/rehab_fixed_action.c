@@ -1,4 +1,5 @@
 #include "rehab_fixed_action.h"
+#include "control_layer_cfg.h"
 
 static const rehab_fixed_action_profile_t s_profiles[] = {
     {
@@ -17,7 +18,7 @@ static const rehab_fixed_action_profile_t s_profiles[] = {
         .max_velocity_rad_s = 0.12f,
         .max_accel_rad_s2 = 0.20f,
         .max_jerk_rad_s3 = 0.50f,
-        .max_feedback_velocity_rad_s = 0.35f,
+        .max_feedback_velocity_rad_s = CONTROL_REHAB_FIXED_ACTION_MAX_FEEDBACK_SPEED_RAD_S,
         .dwell_ms = 500U,
         .repetitions = 3U,
     },
@@ -37,7 +38,7 @@ static const rehab_fixed_action_profile_t s_profiles[] = {
         .max_velocity_rad_s = 0.12f,
         .max_accel_rad_s2 = 0.20f,
         .max_jerk_rad_s3 = 0.50f,
-        .max_feedback_velocity_rad_s = 0.35f,
+        .max_feedback_velocity_rad_s = CONTROL_REHAB_FIXED_ACTION_MAX_FEEDBACK_SPEED_RAD_S,
         .dwell_ms = 500U,
         .repetitions = 3U,
     },
@@ -64,7 +65,7 @@ static const rehab_fixed_action_profile_t s_profiles[] = {
         .max_velocity_rad_s = 0.12f,
         .max_accel_rad_s2 = 0.20f,
         .max_jerk_rad_s3 = 0.50f,
-        .max_feedback_velocity_rad_s = 0.35f,
+        .max_feedback_velocity_rad_s = CONTROL_REHAB_FIXED_ACTION_MAX_FEEDBACK_SPEED_RAD_S,
         .dwell_ms = 500U,
         .repetitions = 3U,
     },
@@ -75,7 +76,7 @@ static const rehab_fixed_action_profile_t s_profiles[] = {
         .max_velocity_rad_s = 0.12f,
         .max_accel_rad_s2 = 0.20f,
         .max_jerk_rad_s3 = 0.50f,
-        .max_feedback_velocity_rad_s = 0.35f,
+        .max_feedback_velocity_rad_s = CONTROL_REHAB_FIXED_ACTION_MAX_FEEDBACK_SPEED_RAD_S,
         .dwell_ms = 500U,
         .repetitions = 3U,
     },

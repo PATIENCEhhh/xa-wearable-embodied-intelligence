@@ -4,7 +4,7 @@ import os
 
 cwd  = GetCurrentDir()
 path = [cwd]
-src = ['main.c']
+src = ['main.c', 'm33_dap_diag.c', 'bench5_guard.c', 'bench_support_hold.c', 'bench_resist.c', 'm33_bench5.c']
 group = DefineGroup('Applications', src, depend = [''], CPPPATH = path)
 
 list = os.listdir(cwd)

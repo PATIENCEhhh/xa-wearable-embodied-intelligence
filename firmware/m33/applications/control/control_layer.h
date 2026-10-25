@@ -149,6 +149,9 @@ typedef struct
     rt_uint8_t motor_id;
     /* 参数索引，例如 0x7005 run_mode。 */
     rt_uint16_t index;
+    /* 区分0x11真实读回复与0x12写回显；本机接收序号用于同tick新鲜度核对。 */
+    rt_uint8_t response_type;
+    rt_uint32_t response_seq;
     /* 当参数是 u8 模式值时保存原始值。 */
     rt_uint8_t raw_u8;
     /* 当参数是 float 时保存解析值。 */
